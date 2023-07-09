@@ -5,15 +5,16 @@
 
 int main()
 {
-    unsigned int ww{ 300 }, wh{300};
-	sf::RenderWindow window(sf::VideoMode(ww, wh), "Slimemold Sim");
+    unsigned int ww{ 500 }, wh{500};
+	sf::RenderWindow window(sf::VideoMode(ww, wh), "sussy stuff");//Slimemold Sim
 	sf::Event e;
 
     std::vector<slime> slimes;
-    for (size_t i = 0; i < 200; i++)
+    for (size_t i = 0; i < 1000; i++)
     {
         slime s;
-        s.initialise(sf::Vector2f(rand() % ww, rand() % wh), rand() % 360);
+        //s.initialise(sf::Vector2f(rand() % ww, rand() % wh), rand() % 360);
+        s.initialise(sf::Vector2f(ww/2, wh/2), rand() % 360);
         slimes.push_back(s);
     }
     sf::Image image;
@@ -33,8 +34,8 @@ int main()
         window.clear(sf::Color(0, 0, 0, 255));
         for (size_t i = 0; i < slimes.size(); i++)
         {
-            slimes[i].update(window.getSize());
-            image.setPixel(slimes[i].getpos().x, slimes[i].getpos().y, sf::Color::White);
+            slimes[i].update(image);
+            // image.setPixel(slimes[i].getpos().x, slimes[i].getpos().y, sf::Color::White);
         }
         for (int i = 1; i < image.getSize().x-1; i++)
         {
