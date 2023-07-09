@@ -12,21 +12,29 @@ void slime::update(sf::Image& i)
 	sf::Vector2f dir = sf::Vector2f(cos(angle), sin(angle));
 	sf::Vector2f dirL = sf::Vector2f(cos(angle - virAngle), sin(angle - virAngle));
 	sf::Vector2f dirR = sf::Vector2f(cos(angle + virAngle), sin(angle + virAngle));
-	if ((i.getPixel(pos.x + dir.x, pos.y + dir.y).r >= i.getPixel(pos.x + dirL.x, pos.y + dirL.y).r) && (i.getPixel(pos.x + dir.x, pos.y + dir.y).r >= i.getPixel(pos.x + dirR.x, pos.y + dirR.y).r))
+	if ((i.getPixel(int(pos.x + dir.x), int(pos.y + dir.y)).r >= i.getPixel(int(pos.x + dirL.x), int(pos.y + dirL.y)).r)
+		&& (i.getPixel(int(pos.x + dir.x), int(pos.y + dir.y)).r >= i.getPixel(int(pos.x + dirR.x), int(pos.y + dirR.y)).r))
 	{
 		pos = sf::Vector2f(pos.x + dir.x, pos.y + dir.y );
 	}
-	else if (i.getPixel(pos.x + dirR.x, pos.y + dirR.y).r >= i.getPixel(pos.x + dirL.x, pos.y + dirL.y).r)
+	else if ((i.getPixel(int(pos.x + dirR.x), int(pos.y + dirR.y)).r >= i.getPixel(int(pos.x + dirL.x), int(pos.y + dirL.y)).r)
+		&& ((i.getPixel(int(pos.x + dirR.x), int(pos.y + dirR.y)).r >= mincol)))
 	{
-		dirR = sf::Vector2f(cos(angle + turnAngle), sin(angle + turnAngle));
+		float per = (i.getPixel(int(pos.x + dirR.x), int(pos.y + dirR.y)).r - i.getPixel(int(pos.x + dir.x), int(pos.y + dir.y)).r) / 255;
+		dirR = sf::Vector2f(cos(angle + turnAngle), sin(angle + turnAngle))*per;
 		pos = sf::Vector2f(pos.x + dirR.x, pos.y + dirR.y);
 		angle += turnAngle;
 	}
-	else
+	else if (i.getPixel(pos.x + dirL.x, pos.y + dirL.y).r >= mincol)
 	{
-		dirL = sf::Vector2f(cos(angle - turnAngle), sin(angle - turnAngle));
+		float per = (i.getPixel(int(pos.x + dirL.x), int(pos.y + dir.y)).r - i.getPixel(int(pos.x + dir.x), int(pos.y + dir.y)).r) / 255;
+		dirL = sf::Vector2f(cos(angle - turnAngle), sin(angle - turnAngle)) *per;
 		pos = sf::Vector2f(pos.x + dirL.x, pos.y + dirL.y);
 		angle -= turnAngle;
+	}
+	else
+	{
+		pos = sf::Vector2f(pos.x + dir.x, pos.y + dir.y);
 	}
 	
 	bool wall{ 0 };
@@ -53,7 +61,7 @@ void slime::update(sf::Image& i)
 	}
 	if (wall)
 	{
-		angle = rand() % 360;
+		angle = rand() % (2 * 31415) /10000;
 		wall = 0;
 	}
 	i.setPixel(pos.x, pos.y, sf::Color::White);

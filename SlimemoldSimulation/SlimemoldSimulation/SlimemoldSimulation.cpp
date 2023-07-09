@@ -10,11 +10,11 @@ int main()
 	sf::Event e;
 
     std::vector<slime> slimes;
-    for (size_t i = 0; i < 1000; i++)
+    for (size_t i = 0; i < 100000; i++)
     {
         slime s;
-        //s.initialise(sf::Vector2f(rand() % ww, rand() % wh), rand() % 360);
-        s.initialise(sf::Vector2f(ww/2, wh/2), rand() % 360);
+        s.initialise(sf::Vector2f(ww/2 + ((rand() % 50)-25),wh/2 + ((rand() % 50) - 25)), rand() % 360);
+        //s.initialise(sf::Vector2f(ww/2, wh/2), rand() % (2 * 31415) / 10000);
         slimes.push_back(s);
     }
     sf::Image image;
@@ -37,11 +37,61 @@ int main()
             slimes[i].update(image);
             // image.setPixel(slimes[i].getpos().x, slimes[i].getpos().y, sf::Color::White);
         }
-        for (int i = 1; i < image.getSize().x-1; i++)
+        for (int i = 1; i < image.getSize().x; i++)
         {
-            for (size_t j = 1; j < image.getSize().y-1; j++)
+            for (size_t j = 1; j < image.getSize().y; j++)
             {
-                int blend = (image.getPixel(i - 1, j - 1).r + image.getPixel(i - 1, j).r + image.getPixel(i - 1, j + 1).r + image.getPixel(i , j - 1).r + (image.getPixel(i, j).r * 50) + image.getPixel(i, j +1).r + image.getPixel(i + 1, j - 1).r + image.getPixel(i + 1, j).r + image.getPixel(i + 1, j + 1).r ) / 58;
+                bool left = (i - 1 >= 0);
+                bool right = (i + 1 <= (image.getSize().x));
+                bool up = (j - 1 >= 0);
+                bool down = (j + 1 <= (image.getSize().y));
+
+                //int blend = (image.getPixel(i - 1, j - 1).r + image.getPixel(i - 1, j).r + image.getPixel(i - 1, j + 1).r + image.getPixel(i , j - 1).r + (image.getPixel(i, j).r * 50) + image.getPixel(i, j +1).r + image.getPixel(i + 1, j - 1).r + image.getPixel(i + 1, j).r + image.getPixel(i + 1, j + 1).r ) / 58;
+                int blend{ 0 };
+                int totel{ 0 };
+                if (left && up)
+                {
+                    blend += image.getPixel(i - 1, j - 1).r;
+                    totel++;
+                }
+                if (left && down)
+                {
+                    blend += image.getPixel(i - 1, j + 1).r;
+                    totel++;
+                }
+                if (left)
+                {
+                    blend += image.getPixel(i - 1, j).r;
+                    totel++;
+                }
+                if (right && down)
+                {
+                    blend += image.getPixel(i + 1, j + 1).r;
+                    totel++;
+                }
+                if (right && up)
+                {
+                    blend += image.getPixel(i + 1, j - 1).r;
+                    totel++;
+                }
+                if (right)
+                {
+                    blend += image.getPixel(i + 1, j).r;
+                    totel++;
+                }
+                if (up)
+                {
+                    blend += image.getPixel(i, j - 1).r;
+                    totel++;
+                }
+                if (down)
+                {
+                    blend += image.getPixel(i, j + 1).r;
+                    totel++;
+                }
+                blend += (image.getPixel(i, j).r * 50);
+                totel+=50;
+                blend /= totel;
                 image.setPixel(i, j, sf::Color(blend, blend, blend));
             }
         }
