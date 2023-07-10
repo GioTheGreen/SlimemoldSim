@@ -9,8 +9,8 @@ private:
 	sf::Vector2f pos{ 0, 0 };
 	sf::Image map;
 	float angle{ 0 };
-	float virAngle{ 3.1415f / 2 };
-	float turnAngle{ 3.1415 / 16 };
+	float virAngle{ 3.1415f /4 };
+	float turnAngle{ 3.1415f /32};
 	int mincol{ 50 };
 public:
 	void initialise(sf::Vector2f p, float a);

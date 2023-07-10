@@ -10,7 +10,7 @@ int main()
 	sf::Event e;
 
     std::vector<slime> slimes;
-    for (size_t i = 0; i < 100000; i++)
+    for (size_t i = 0; i < 10000; i++)
     {
         slime s;
         s.initialise(sf::Vector2f(ww/2 + ((rand() % 50)-25),wh/2 + ((rand() % 50) - 25)), rand() % 360);
